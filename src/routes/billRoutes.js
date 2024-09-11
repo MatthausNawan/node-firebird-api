@@ -3,6 +3,8 @@ const router = express.Router();
 
 const billController = require("../controllers/billController");
 
-router.get("/bill/:id", billController.getBoleto);
+router.get("/customer/bills", billController.getBills);
+router.get("/customer/bills/:id", billController.getBoleto);
+
 
 module.exports = router;

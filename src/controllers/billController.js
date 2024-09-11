@@ -1,4 +1,5 @@
 const { Bancos, Boletos, streamToPromise } = require("gerar-boletos");
+const BillModel = require("../model/billModel");
 
 module.exports = {
   getBoleto: (req, res) => {
@@ -67,4 +68,20 @@ module.exports = {
 
     res.json({ success: true, url: `./tmp/boletos/"${filename}.pdf` });
   },
+  getBills:async(req,res) => {
+    const customerCod = req.query.customerCod;
+
+    if (!customerCod) {
+      res.status(400).json({ error: "CPF é obrigatório" });
+    }
+
+    await BillModel.getBillsFromCustomer(customerCod, (data) => {
+
+      if (!data || data.length === 0) {
+        return res.status(404).json({ message: "Nenhum registro" });
+      }
+
+      return res.json(data);
+    });
+  }
 };
