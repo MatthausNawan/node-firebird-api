@@ -1,5 +1,6 @@
 const { Bancos, Boletos, streamToPromise } = require("gerar-boletos");
 const BillModel = require("../model/billModel");
+const path = require('path');
 
 module.exports = {
   getBoleto: (req, res) => {
@@ -52,11 +53,12 @@ module.exports = {
       },
     };
 
-    const filename = Math.random(Math.random() * 10).toString();
+    const filename = boleto.beneficiario.nossoNumero;
+
     const novoBoleto = new Boletos(boleto);
     novoBoleto.gerarBoleto();
 
-    novoBoleto
+    novoBoleto      
       .pdfFile(filename)
       .then(async ({ stream }) => {
         // ctx.res.set('Content-type', 'application/pdf');
@@ -82,6 +84,20 @@ module.exports = {
       }
 
       return res.json(data);
+    });
+  },
+  download:async(req,res) => {
+
+    
+    const filePath = path.join(__dirname, '../','public', 'boleto_pdf.pdf');
+  
+    // Enviar o arquivo para downloads
+    res.download(filePath, (err) => {
+      if (err) {
+        // Se ocorrer algum erro durante o download
+        console.error('Erro ao tentar baixar o arquivo:', err);
+        res.status(500).send('Erro ao tentar baixar o arquivo.');
+      }
     });
   }
 };

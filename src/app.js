@@ -1,12 +1,15 @@
 const express = require("express");
+const path = require('path');
 const bodyParser = require("body-parser");
 
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
+
 // Middleware para parsear JSON
 app.use(bodyParser.json());
+app.use('/public', express.static(path.join(__dirname,'../' ,'tmp','boletos')));
 
 //#rotas
 const userRoutes = require("./routes/userRoutes");
@@ -19,5 +22,5 @@ app.use(userRoutes);
 app.use(historicRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);  
 });
